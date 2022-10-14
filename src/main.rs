@@ -1,33 +1,13 @@
 mod board;
-
-fn clear() -> () {
-    print!("\x1B[2J\x1B[1;1H");
-}
-
-fn display_board(board: Vec<char>) -> () {
-    println!(" {} | {} | {}", board[0], board[1], board[2]);
-    println!("---+---+---");
-    println!(" {} | {} | {}", board[3], board[4], board[5]);
-    println!("---+---+---");
-    println!(" {} | {} | {}", board[6], board[7], board[8]);
-}
-
-fn display_winner(winner: char, player: char) -> () {
-    if winner == player {
-        println!("*** You Won! ***");
-    } else if winner != player && winner != ' ' {
-        println!("*** You lost! ***");
-    } else {
-        println!("*** You tied! ***");
-    }
-}
+mod display;
 
 fn main() {
     let mut board = vec![' '; 9];
     let mut next_turn = 'x';
     let mut winner = ' ';
 
-    clear();
+    display::clear();
+    display::logo();
 
     let player = match board::get_player_character() {
         Ok(c) => c,
@@ -36,8 +16,9 @@ fn main() {
     let computer = if player == 'x' { 'o' } else { 'x' };
 
     while winner == ' ' && board::check_free_spaces(board.clone()) {
-        clear();
-        display_board(board.clone());
+        display::clear();
+        display::logo();
+        display::display_board(board.clone());
         if next_turn == player {
             while next_turn == player {
                 match board::player_turn(&mut board, player) {
@@ -67,7 +48,8 @@ fn main() {
         }
     }
 
-    clear();
-    display_winner(winner, player);
-    display_board(board);
+    display::clear();
+    display::logo();
+    display::display_winner(winner, player);
+    display::display_board(board);
 }
